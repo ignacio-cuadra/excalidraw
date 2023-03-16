@@ -332,9 +332,7 @@ export const wrapText = (text: string, font: FontString, maxWidth: number) => {
   let currentLineWidthTillNow = 0;
 
   const push = (str: string) => {
-    if (str.trim()) {
-      lines.push(str);
-    }
+    lines.push(str);
   };
 
   const resetParams = () => {
@@ -431,8 +429,6 @@ export const wrapText = (text: string, font: FontString, maxWidth: number) => {
     }
 
     if (currentLine.slice(-1) === " ") {
-      // only remove last trailing space which we have added when joining words
-      currentLine = currentLine.slice(0, -1);
       push(currentLine);
     }
   });
