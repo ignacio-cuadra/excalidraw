@@ -363,10 +363,11 @@ export const wrapText = (text: string, font: FontString, maxWidth: number) => {
       if (currentWordWidth === maxWidth) {
         push(words[index]);
         index++;
+        continue;
       }
 
       // Start breaking longer words exceeding max width
-      else if (currentWordWidth > maxWidth) {
+      if (currentWordWidth > maxWidth) {
         // push current line since the current word exceeds the max width
         // so will be appended in next line
         push(currentLine);
@@ -402,31 +403,33 @@ export const wrapText = (text: string, font: FontString, maxWidth: number) => {
           currentLineWidthTillNow += spaceWidth;
         }
         index++;
-      } else {
-        // Start appending words in a line till max width reached
-        while (currentLineWidthTillNow < maxWidth && index < words.length) {
-          const word = words[index];
-          currentLineWidthTillNow = getLineWidth(currentLine + word, font);
+        continue;
+      }
 
-          if (currentLineWidthTillNow > maxWidth) {
-            push(currentLine);
-            resetParams();
+      // Start appending words in a line till max width reached
+      while (currentLineWidthTillNow < maxWidth && index < words.length) {
+        const word = words[index];
+        currentLineWidthTillNow = getLineWidth(currentLine + word, font);
 
-            break;
-          }
-          index++;
-          currentLine += `${word} `;
+        if (currentLineWidthTillNow > maxWidth) {
+          push(currentLine);
+          resetParams();
 
-          // Push the word if appending space exceeds max width
-          if (currentLineWidthTillNow + spaceWidth >= maxWidth) {
-            const word = currentLine.slice(0, -1);
-            push(word);
-            resetParams();
-            break;
-          }
+          break;
+        }
+        index++;
+        currentLine += `${word} `;
+
+        // Push the word if appending space exceeds max width
+        if (currentLineWidthTillNow + spaceWidth >= maxWidth) {
+          const word = currentLine.slice(0, -1);
+          push(word);
+          resetParams();
+          break;
         }
       }
     }
+
     if (currentLine.slice(-1) === " ") {
       // only remove last trailing space which we have added when joining words
       currentLine = currentLine.slice(0, -1);
